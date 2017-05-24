@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Fbtn = (FloatingActionButton) findViewById(R.id.fab);
-
+/////
        /* map.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
