@@ -31,7 +31,29 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             tools:layout_editor_absoluteY="-10dp"></fragment>
+
+        <Button
+        android:id="@+id/loconof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:onClick="onClickonof"
+        android:text="on/off loc"
+        tools:layout_editor_absoluteX="257dp"
+        tools:layout_editor_absoluteY="0dp" />
+        <Button
+            android:id="@+id/of"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:onClick="onClickof"
+            android:text="on/off loc"
+            tools:layout_editor_absoluteX="257dp"
+            tools:layout_editor_absoluteY="0dp" />
+
     </FrameLayout>
+
+
 
 
 </android.support.constraint.ConstraintLayout>
