@@ -39,6 +39,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements
     private FloatingActionButton Fbtn;
 
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
-    private ArrayList<String> strPoluch;
+    public ArrayList<String> strPoluch;
     private GoogleMap mMap;
 
 
@@ -99,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements
 
     // we will need to take the latitude and the logntitude from a certain point
     // this is the center of New York
-    public String latitude = "49.985678";
-    public String longtitude = "36.233631";
-    public String query="eat";
+    public String latitude = "1.985678";
+    public String longtitude = "1.233631";
+    public String query="куку";
 
     ArrayAdapter<String> myAdapter;
 
@@ -109,15 +110,16 @@ boolean forsqmark=false;
 
 ////foursq
 
-
+     public String qqqqq="macdonalds";
+   public String qqqqq1="дом";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Fbtn = (FloatingActionButton) findViewById(R.id.fab);
-        onOfloc = (Button) findViewById(R.id.loconof);
-        ofloc = (Button) findViewById(R.id.of);
+       // onOfloc = (Button) findViewById(R.id.loconof);
+      //  ofloc = (Button) findViewById(R.id.of);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -139,7 +141,6 @@ boolean forsqmark=false;
         });
 */
 
-
         updateValuesFromBundle(savedInstanceState);
 
         buildGoogleApiClient();
@@ -157,6 +158,12 @@ boolean forsqmark=false;
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 
+public void onClickFors(View view){
+    query=qqqqq1;
+    new fourquare().execute();
+    updateLocationUI();
+
+}
 
     public void CheckVoiceRecognition() {
         PackageManager pm = getPackageManager();
@@ -181,6 +188,16 @@ boolean forsqmark=false;
                 } else {
                     strPoluch = textMatchlist;
                     Toast.makeText(this, strPoluch.get(0), Toast.LENGTH_LONG).show();
+                   // qqqqq1=strPoluch.get(0);
+                    query=strPoluch.get(0);
+                  //  Toast.makeText(this, query+" проверка записи", Toast.LENGTH_LONG).show();
+                    new fourquare().execute();
+                    updateLocationUI();
+                  /*  if(strPoluch.get(0)!=null|strPoluch.get(0)!=""){
+                    qqqqq1=strPoluch.get(0);
+                    Toast.makeText(this, qqqqq1+"qqqqq", Toast.LENGTH_LONG).show();}
+*/
+
                 }
             }
         } else if (resultCode == RecognizerIntent.RESULT_AUDIO_ERROR) {
@@ -265,15 +282,20 @@ boolean forsqmark=false;
 
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
+
             Toast.makeText(this,(Double.toString(mCurrentLocation.getLatitude()) + ":" +
                     Double.toString(mCurrentLocation.getLongitude())+" ::"+mLastUpdateTime), Toast.LENGTH_LONG).show();
 
             latitude=Double.toString(mCurrentLocation.getLatitude());
             longtitude=Double.toString(mCurrentLocation.getLongitude());
             LatLng sydney = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("You are here"));
+          //  mMap.addMarker(new MarkerOptions().position(sydney).title("You are here"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,12));
-            new fourquare().execute();
+            mMap.addMarker(new MarkerOptions()
+                    .position(sydney)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title("You are here"));
+
+       //   new fourquare().execute();
 /*
             LatLng sydney12 = new LatLng(Double.parseDouble(venuesList.get(0).getLatitude()),
                     Double.parseDouble(venuesList.get(0).getLongtitude()));
@@ -454,6 +476,7 @@ private void updateUI() {
 
        @Override
        protected String doInBackground(View... urls) {
+          // query=qqqqq1;
            // make Call to the url
            temp = makeCall("https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET +
                    "&v=20130815"+ "&query="+query+"&ll="+latitude+","+longtitude);
@@ -489,9 +512,22 @@ private void updateUI() {
                   if (venuesList.get(i).getName() != null | venuesList.get(i).getName() != "") {
                       LatLng sydney12 = new LatLng(Double.parseDouble(venuesList.get(i).getLatitude()),
                               Double.parseDouble(venuesList.get(i).getLongtitude()));
+/*
+                      LatLng sydney12 = new LatLng(i+1.3,
+                              i+1.3);
+*/
                       mMap.addMarker(new MarkerOptions().position(sydney12).title(venuesList.get(i).getName()));
                   }
               }
+              /* LatLng sydney12 = new LatLng(Double.parseDouble(venuesList.get(0).getLatitude()),
+                       Double.parseDouble(venuesList.get(0).getLongtitude()));
+
+
+               mMap.addMarker(new MarkerOptions().position(sydney12).title(venuesList.get(0).getName()));
+*/
+
+
+
            }
        }
    }
@@ -551,13 +587,14 @@ private void updateUI() {
                                 if (jsonArray.getJSONObject(i).getJSONObject("location").has("address")) {
                                     if (jsonArray.getJSONObject(i).getJSONObject("location").has("city")) {
                                         poi.setCity(jsonArray.getJSONObject(i).getJSONObject("location").getString("city"));
-                                        poi.setLatitude(jsonArray.getJSONObject(i).getJSONObject("location").getString("lat"));
-                                        poi.setLongtitude(jsonArray.getJSONObject(i).getJSONObject("location").getString("lng"));
+
                                     }
                                     if (jsonArray.getJSONObject(i).has("categories")) {
                                         if (jsonArray.getJSONObject(i).getJSONArray("categories").length() > 0) {
                                             if (jsonArray.getJSONObject(i).getJSONArray("categories").getJSONObject(0).has("icon")) {
                                                 poi.setCategory(jsonArray.getJSONObject(i).getJSONArray("categories").getJSONObject(0).getString("name"));
+                                                poi.setLatitude(jsonArray.getJSONObject(i).getJSONObject("location").getString("lat"));
+                                                poi.setLongtitude(jsonArray.getJSONObject(i).getJSONObject("location").getString("lng"));
                                             }
                                         }
                                     }
